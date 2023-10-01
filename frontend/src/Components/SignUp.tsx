@@ -1,4 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
 
 interface FormData {
   password: string;
@@ -15,8 +16,13 @@ const SignUpForm = () => {
     formState: { errors },
   } = useForm<FormData>({ mode: "onChange" });
 
-  const onSubmithandler: SubmitHandler<FormData> = (data) => {
+  const onSubmitHandler: SubmitHandler<FormData> = async (data) => {
     console.log("Sign-up data:", data);
+    axios.post("http://localhost:5000/signup", data)
+    .then((res) => {
+        console.log(res.data.status)
+    })
+    .catch((err) => console.error(err.message))
   };
 
   return (
@@ -36,7 +42,7 @@ const SignUpForm = () => {
           <form
             className="space-y-6"
             action=""
-            onSubmit={handleSubmit(onSubmithandler)}
+            onSubmit={handleSubmit(onSubmitHandler)}
           >
             <div>
               <label
