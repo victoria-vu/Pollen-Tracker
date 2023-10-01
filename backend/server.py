@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session
 from model import connect_to_db, db
-import model
+import crud
 from flask_cors import CORS
 
 
@@ -15,18 +15,18 @@ def create_user():
 
     email = request.json["email"]
     password = request.json["password"]
-    fname = request.json["fname"]
-    lname = request.json["lname"]
+    fname = request.json["firstName"]
+    lname = request.json["lastName"]
     zipcode = request.json["zipcode"]
 
-    existing_user = model.get_user_by_email(email)
+    existing_user = crud.get_user_by_email(email)
 
     if existing_user:
         return jsonify({
             "error": "User already exists. Please use another email."
         })
     
-    user = model.create_user(email, password, fname, lname, zipcode)
+    user = crud.create_user(email, password, fname, lname, zipcode)
     db.session.add(user)
     db.session.commit()
 
@@ -42,7 +42,7 @@ def login_user():
     email = request.json["email"]
     password = request.json["password"]
 
-    user = model.get_user_by_email(email)
+    user = crud.get_user_by_email(email)
 
     if not user:
         return jsonify({
